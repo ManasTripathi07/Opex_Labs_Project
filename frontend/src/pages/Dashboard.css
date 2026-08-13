@@ -1,0 +1,35 @@
+.dashboard h1 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.dashboard h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.dashboard-stats {
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.status-item {
+  text-align: center;
+  padding: 1rem;
+}

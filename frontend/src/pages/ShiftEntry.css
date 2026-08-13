@@ -1,0 +1,197 @@
+.shift-entry {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  padding: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.shift-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+}
+
+.shift-header h1 {
+  font-size: 2.5rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.shift-subtitle {
+  font-size: 1.25rem;
+  color: var(--color-text-secondary);
+}
+
+.shift-loading {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.5rem;
+  color: var(--color-text-secondary);
+}
+
+.shift-card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.shift-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.info-label {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.previous-value {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+}
+
+.shift-label {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--color-text);
+}
+
+.shift-input {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.125rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  box-sizing: border-box;
+}
+
+.shift-input.large {
+  font-size: 1.5rem;
+  padding: 1.25rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.shift-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.shift-select {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.125rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  background-color: white;
+}
+
+.shift-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.shift-tab {
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid var(--color-border);
+  background-color: white;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.shift-tab:active {
+  transform: scale(0.98);
+}
+
+.shift-tab.active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.shift-submit {
+  width: 100%;
+  padding: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  background-color: var(--color-success);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-md);
+}
+
+.shift-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.shift-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.shift-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.shift-success {
+  background-color: #d1fae5;
+  color: #065f46;
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  animation: slideIn 0.3s ease;
+}
+
+.shift-error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  text-align: center;
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (min-width: 768px) {
+  .shift-entry {
+    padding: 2rem;
+  }
+}
