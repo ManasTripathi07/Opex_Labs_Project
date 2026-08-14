@@ -52,10 +52,16 @@ A comprehensive production tracking system for embroidery manufacturing faciliti
 
 ## Getting Started
 
+### Quick Start
+
+**For detailed step-by-step instructions, especially for Windows + PostgreSQL setup, see [QUICK_START.md](QUICK_START.md).**
+
 ### Prerequisites
 - Node.js 18+ and npm
-- PostgreSQL 14+
+- PostgreSQL 14+ (tested with PostgreSQL 17)
 - Git
+
+**Windows Users:** PostgreSQL requires additional PATH configuration. See [QUICK_START.md](QUICK_START.md#21-add-postgresql-to-path-windows) for detailed instructions.
 
 ### Installation
 
@@ -71,17 +77,33 @@ npm install
 ```
 
 3. Set up the database:
+
+**Linux/Mac:**
 ```bash
 # Create PostgreSQL database
 createdb production_tracker
-
-# Copy environment files
-cp backend/.env.example backend/.env
 
 # Update database credentials in backend/.env
 # Then run migrations
 npm run migrate --workspace=backend
 ```
+
+**Windows:**
+```powershell
+# Add PostgreSQL to PATH first (see QUICK_START.md)
+# Then connect to PostgreSQL
+psql -U postgres -d postgres
+
+# Create database
+CREATE DATABASE production_tracker;
+\q
+
+# Update database credentials in backend/.env
+# Then run migrations
+npm run migrate --workspace=backend
+```
+
+See [QUICK_START.md](QUICK_START.md#step-2-setup-postgresql-database-5-minutes) for troubleshooting database issues.
 
 4. Start development servers:
 ```bash
