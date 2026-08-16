@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { api } from '../api/client';
 import { format } from 'date-fns';
+import DeleteButton from '../components/DeleteButton';
+import ConfirmDialog from '../components/ConfirmDialog';
+import Notification from '../components/Notification';
+import { useDelete } from '../hooks/useDelete';
 import './InboundUI.css';
 
 function InboundUI() {
@@ -17,6 +21,8 @@ function InboundUI() {
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [notification, setNotification] = useState({ visible: false, message: '', type: 'success' });
+  const { deleteState, openDialog, closeDialog, executeDelete } = useDelete();
 
   useEffect(() => {
     loadData();
@@ -110,6 +116,56 @@ function InboundUI() {
       loadData();
     } catch (error) {
       setError(error.response?.data?.error || 'Failed to create lot');
+    }
+  };
+
+  const handleDeleteLot = (lot) => {
+    openDialog(
+      {
+        id: lot.id,
+        name: lot.lot_number,
+        type: 'Lot',
+      },
+      async () => {
+        try {
+          await api.lots.delete(lot.id);
+
+          setNotification({
+            visible: true,
+            message: `Lot '${lot.lot_number}' deleted successfully.`,
+            type: 'success',
+          });
+
+          loadData();
+        } catch (error) {
+          const errorMessage = error.response?.data?.error || error.message || 'Failed to delete';
+
+          let userFriendlyMessage = `Unable to delete lot '${lot.lot_number}'.`;
+
+          if (errorMessage.toLowerCase().includes('foreign key') ||
+              errorMessage.toLowerCase().includes('constraint') ||
+              errorMessage.toLowerCase().includes('referenced')) {
+            userFriendlyMessage = `Unable to delete lot '${lot.lot_number}' because it has associated sub-lots or production records. Remove those dependencies first.`;
+          } else if (errorMessage.toLowerCase().includes('not found')) {
+            userFriendlyMessage = `Lot '${lot.lot_number}' not found.`;
+          }
+
+          setNotification({
+            visible: true,
+            message: userFriendlyMessage,
+            type: 'error',
+          });
+
+          throw error;
+        }
+      }
+    );
+  };
+
+  const confirmDelete = async () => {
+    const result = await executeDelete();
+    if (!result.success && result.error) {
+      // Error notification already set in handleDeleteLot
     }
   };
 
@@ -256,13 +312,20 @@ function InboundUI() {
                   <td>{format(new Date(lot.received_date), 'MMM dd, yyyy')}</td>
                   <td>{lot.subLots?.length || 0}</td>
                   <td>
-                    <button
-                      className="btn btn-primary"
-                      style={{ padding: '0.25rem 0.75rem', fontSize: '0.8rem' }}
-                      onClick={() => handleAllocateSubLot(lot.id)}
-                    >
-                      Allocate
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                      <button
+                        className="btn btn-primary"
+                        style={{ padding: '0.25rem 0.75rem', fontSize: '0.8rem' }}
+                        onClick={() => handleAllocateSubLot(lot.id)}
+                      >
+                        Allocate
+                      </button>
+                      <DeleteButton
+                        onClick={() => handleDeleteLot(lot)}
+                        ariaLabel={`Delete lot ${lot.lot_number}`}
+                        title={`Delete ${lot.lot_number}`}
+                      />
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -270,6 +333,23 @@ function InboundUI() {
           </table>
         )}
       </div>
+
+      <ConfirmDialog
+        isOpen={deleteState.isOpen}
+        onClose={closeDialog}
+        onConfirm={confirmDelete}
+        title={`Delete ${deleteState.item?.type}?`}
+        message="Are you sure you want to delete:"
+        entityName={deleteState.item?.name}
+        isLoading={deleteState.isLoading}
+      />
+
+      <Notification
+        message={notification.message}
+        type={notification.type}
+        isVisible={notification.visible}
+        onClose={() => setNotification({ ...notification, visible: false })}
+      />
     </div>
   );
 }

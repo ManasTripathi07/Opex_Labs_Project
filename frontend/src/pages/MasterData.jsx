@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
 import { api } from '../api/client';
+import DeleteButton from '../components/DeleteButton';
+import ConfirmDialog from '../components/ConfirmDialog';
+import Notification from '../components/Notification';
+import { useDelete } from '../hooks/useDelete';
 import './MasterData.css';
 
 function MasterData() {
@@ -12,6 +16,8 @@ function MasterData() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [notification, setNotification] = useState({ visible: false, message: '', type: 'success' });
+  const { deleteState, openDialog, closeDialog, executeDelete } = useDelete();
 
   useEffect(() => {
     loadData();
@@ -73,6 +79,83 @@ function MasterData() {
       loadData();
     } catch (error) {
       setError(error.response?.data?.error || 'Failed to create');
+    }
+  };
+
+  const handleDelete = (item, type) => {
+    const entityNames = {
+      clients: 'Client',
+      designs: 'Design',
+      machines: 'Machine',
+      operators: 'Operator',
+    };
+
+    const displayNames = {
+      clients: item.name,
+      designs: item.identifier,
+      machines: item.identifier,
+      operators: item.name,
+    };
+
+    openDialog(
+      {
+        id: item.id,
+        name: displayNames[type],
+        type: entityNames[type],
+      },
+      async () => {
+        try {
+          switch (type) {
+            case 'clients':
+              await api.clients.delete(item.id);
+              break;
+            case 'designs':
+              await api.designs.delete(item.id);
+              break;
+            case 'machines':
+              await api.machines.delete(item.id);
+              break;
+            case 'operators':
+              await api.operators.delete(item.id);
+              break;
+          }
+
+          setNotification({
+            visible: true,
+            message: `${entityNames[type]} '${displayNames[type]}' deleted successfully.`,
+            type: 'success',
+          });
+
+          loadData();
+        } catch (error) {
+          const errorMessage = error.response?.data?.error || error.message || 'Failed to delete';
+
+          let userFriendlyMessage = `Unable to delete '${displayNames[type]}'.`;
+
+          if (errorMessage.toLowerCase().includes('foreign key') ||
+              errorMessage.toLowerCase().includes('constraint') ||
+              errorMessage.toLowerCase().includes('referenced')) {
+            userFriendlyMessage = `Unable to delete '${displayNames[type]}' because it is referenced by existing records. Remove those dependencies first.`;
+          } else if (errorMessage.toLowerCase().includes('not found')) {
+            userFriendlyMessage = `${entityNames[type]} '${displayNames[type]}' not found.`;
+          }
+
+          setNotification({
+            visible: true,
+            message: userFriendlyMessage,
+            type: 'error',
+          });
+
+          throw error;
+        }
+      }
+    );
+  };
+
+  const confirmDelete = async () => {
+    const result = await executeDelete();
+    if (!result.success && result.error) {
+      // Error notification already set in handleDelete
     }
   };
 
@@ -203,6 +286,7 @@ function MasterData() {
                 <th>Name</th>
                 <th>Phone</th>
                 <th>Created</th>
+                <th style={{ width: '80px', textAlign: 'center' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -211,6 +295,13 @@ function MasterData() {
                   <td>{client.name}</td>
                   <td>{client.phone || '-'}</td>
                   <td>{new Date(client.created_at).toLocaleDateString()}</td>
+                  <td style={{ textAlign: 'center' }}>
+                    <DeleteButton
+                      onClick={() => handleDelete(client, 'clients')}
+                      ariaLabel={`Delete client ${client.name}`}
+                      title={`Delete ${client.name}`}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -226,6 +317,7 @@ function MasterData() {
                 <th>Stitches/Piece</th>
                 <th>Rate/Stitch</th>
                 <th>Created</th>
+                <th style={{ width: '80px', textAlign: 'center' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -235,6 +327,13 @@ function MasterData() {
                   <td>{design.stitches_per_piece.toLocaleString()}</td>
                   <td>{design.rate_per_stitch || '-'}</td>
                   <td>{new Date(design.created_at).toLocaleDateString()}</td>
+                  <td style={{ textAlign: 'center' }}>
+                    <DeleteButton
+                      onClick={() => handleDelete(design, 'designs')}
+                      ariaLabel={`Delete design ${design.identifier}`}
+                      title={`Delete ${design.identifier}`}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -249,6 +348,7 @@ function MasterData() {
                 <th>Identifier</th>
                 <th>Name</th>
                 <th>Created</th>
+                <th style={{ width: '80px', textAlign: 'center' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -257,6 +357,13 @@ function MasterData() {
                   <td>{machine.identifier}</td>
                   <td>{machine.name}</td>
                   <td>{new Date(machine.created_at).toLocaleDateString()}</td>
+                  <td style={{ textAlign: 'center' }}>
+                    <DeleteButton
+                      onClick={() => handleDelete(machine, 'machines')}
+                      ariaLabel={`Delete machine ${machine.identifier}`}
+                      title={`Delete ${machine.identifier}`}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -271,6 +378,7 @@ function MasterData() {
                 <th>Name</th>
                 <th>Phone</th>
                 <th>Created</th>
+                <th style={{ width: '80px', textAlign: 'center' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -279,6 +387,13 @@ function MasterData() {
                   <td>{operator.name}</td>
                   <td>{operator.phone || '-'}</td>
                   <td>{new Date(operator.created_at).toLocaleDateString()}</td>
+                  <td style={{ textAlign: 'center' }}>
+                    <DeleteButton
+                      onClick={() => handleDelete(operator, 'operators')}
+                      ariaLabel={`Delete operator ${operator.name}`}
+                      title={`Delete ${operator.name}`}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -350,6 +465,23 @@ function MasterData() {
           renderTable()
         )}
       </div>
+
+      <ConfirmDialog
+        isOpen={deleteState.isOpen}
+        onClose={closeDialog}
+        onConfirm={confirmDelete}
+        title={`Delete ${deleteState.item?.type}?`}
+        message="Are you sure you want to delete:"
+        entityName={deleteState.item?.name}
+        isLoading={deleteState.isLoading}
+      />
+
+      <Notification
+        message={notification.message}
+        type={notification.type}
+        isVisible={notification.visible}
+        onClose={() => setNotification({ ...notification, visible: false })}
+      />
     </div>
   );
 }
