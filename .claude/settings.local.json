@@ -4,7 +4,8 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(psql -U postgres -d production_tracker -c \"\\\\dt\")",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "WebFetch(domain:ui-ux-pro-max-skill.nextlevelbuilder.io)"
     ]
   }
 }

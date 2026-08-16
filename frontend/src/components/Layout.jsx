@@ -1,4 +1,5 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import ThemeToggle from './ThemeToggle';
 import './Layout.css';
 
 function Layout() {
@@ -27,6 +28,7 @@ function Layout() {
               Master Data
             </Link>
           </div>
+          <ThemeToggle />
         </div>
       </nav>
       <main className="main-content">

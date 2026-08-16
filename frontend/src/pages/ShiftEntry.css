@@ -89,7 +89,7 @@
 .shift-input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+  box-shadow: var(--focus-ring);
 }
 
 .shift-select {
@@ -98,7 +98,8 @@
   font-size: 1.125rem;
   border: 2px solid var(--color-border);
   border-radius: var(--radius);
-  background-color: white;
+  background-color: var(--color-input-bg);
+  color: var(--color-input-text);
 }
 
 .shift-tabs {
@@ -112,7 +113,8 @@
   font-size: 1rem;
   font-weight: 600;
   border: 2px solid var(--color-border);
-  background-color: white;
+  background-color: var(--color-surface);
+  color: var(--color-text);
   border-radius: var(--radius);
   cursor: pointer;
   transition: all 0.2s;
@@ -125,7 +127,7 @@
 .shift-tab.active {
   background-color: var(--color-primary);
   border-color: var(--color-primary);
-  color: white;
+  color: var(--color-text-inverse);
 }
 
 .shift-submit {
@@ -134,7 +136,7 @@
   font-size: 1.25rem;
   font-weight: 700;
   background-color: var(--color-success);
-  color: white;
+  color: var(--color-text-inverse);
   border: none;
   border-radius: var(--radius);
   cursor: pointer;
@@ -144,7 +146,7 @@
 
 .shift-submit:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-lg);
 }
 
 .shift-submit:active:not(:disabled) {
@@ -157,8 +159,9 @@
 }
 
 .shift-success {
-  background-color: #d1fae5;
-  color: #065f46;
+  background-color: var(--color-completed-bg);
+  color: var(--color-completed);
+  border: 1px solid var(--color-completed);
   padding: 1.5rem;
   border-radius: var(--radius);
   text-align: center;
@@ -169,8 +172,9 @@
 }
 
 .shift-error {
-  background-color: #fee2e2;
-  color: #991b1b;
+  background-color: var(--alert-error-bg);
+  color: var(--alert-error-text);
+  border: 1px solid var(--alert-error-border);
   padding: 1.5rem;
   border-radius: var(--radius);
   text-align: center;

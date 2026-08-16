@@ -16,7 +16,7 @@
   padding: 0 2rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 2rem;
   height: 64px;
 }
 
@@ -29,6 +29,7 @@
 .navbar-links {
   display: flex;
   gap: 1rem;
+  flex: 1;
 }
 
 .navbar-links a {
@@ -47,7 +48,7 @@
 
 .navbar-links a.active {
   background-color: var(--color-primary);
-  color: white;
+  color: var(--color-text-inverse);
 }
 
 .main-content {
