@@ -3,6 +3,7 @@ import { api } from '../api/client';
 import { format } from 'date-fns';
 import DeleteButton from '../components/DeleteButton';
 import ConfirmDialog from '../components/ConfirmDialog';
+import BlockedDeleteDialog from '../components/BlockedDeleteDialog';
 import Notification from '../components/Notification';
 import { useDelete } from '../hooks/useDelete';
 import './InboundUI.css';
@@ -22,6 +23,12 @@ function InboundUI() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [notification, setNotification] = useState({ visible: false, message: '', type: 'success' });
+  const [blockedDeleteDialog, setBlockedDeleteDialog] = useState({
+    isOpen: false,
+    entityType: '',
+    entityName: '',
+    dependencies: null
+  });
   const { deleteState, openDialog, closeDialog, executeDelete } = useDelete();
 
   useEffect(() => {
@@ -119,7 +126,26 @@ function InboundUI() {
     }
   };
 
-  const handleDeleteLot = (lot) => {
+  const handleDeleteLot = async (lot) => {
+    // Check for dependencies first
+    try {
+      const depCheck = await api.lots.checkDependencies(lot.id);
+
+      if (depCheck.data.hasDependencies) {
+        // BLOCK deletion - show informational dialog
+        setBlockedDeleteDialog({
+          isOpen: true,
+          entityType: 'Lot',
+          entityName: lot.lot_number,
+          dependencies: depCheck.data.dependencies
+        });
+        return;
+      }
+    } catch (error) {
+      console.error('Error checking lot dependencies:', error);
+    }
+
+    // No dependencies - show confirmation dialog for safe deletion
     openDialog(
       {
         id: lot.id,
@@ -139,13 +165,17 @@ function InboundUI() {
           loadData();
         } catch (error) {
           const errorMessage = error.response?.data?.error || error.message || 'Failed to delete';
+          const errorDetails = error.response?.data?.details || '';
 
           let userFriendlyMessage = `Unable to delete lot '${lot.lot_number}'.`;
 
-          if (errorMessage.toLowerCase().includes('foreign key') ||
+          if (errorDetails) {
+            userFriendlyMessage = errorDetails;
+          } else if (errorMessage.toLowerCase().includes('foreign key') ||
               errorMessage.toLowerCase().includes('constraint') ||
-              errorMessage.toLowerCase().includes('referenced')) {
-            userFriendlyMessage = `Unable to delete lot '${lot.lot_number}' because it has associated sub-lots or production records. Remove those dependencies first.`;
+              errorMessage.toLowerCase().includes('referenced') ||
+              errorMessage.toLowerCase().includes('assignments')) {
+            userFriendlyMessage = `Cannot delete lot '${lot.lot_number}' because it is associated with production records. Production-level data cannot be deleted from this interface.`;
           } else if (errorMessage.toLowerCase().includes('not found')) {
             userFriendlyMessage = `Lot '${lot.lot_number}' not found.`;
           }
@@ -342,6 +372,14 @@ function InboundUI() {
         message="Are you sure you want to delete:"
         entityName={deleteState.item?.name}
         isLoading={deleteState.isLoading}
+      />
+
+      <BlockedDeleteDialog
+        isOpen={blockedDeleteDialog.isOpen}
+        onClose={() => setBlockedDeleteDialog({ ...blockedDeleteDialog, isOpen: false })}
+        entityType={blockedDeleteDialog.entityType}
+        entityName={blockedDeleteDialog.entityName}
+        dependencies={blockedDeleteDialog.dependencies}
       />
 
       <Notification

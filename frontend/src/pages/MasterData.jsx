@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { api } from '../api/client';
 import DeleteButton from '../components/DeleteButton';
 import ConfirmDialog from '../components/ConfirmDialog';
+import BlockedDeleteDialog from '../components/BlockedDeleteDialog';
 import Notification from '../components/Notification';
 import { useDelete } from '../hooks/useDelete';
 import './MasterData.css';
@@ -17,6 +18,12 @@ function MasterData() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [notification, setNotification] = useState({ visible: false, message: '', type: 'success' });
+  const [blockedDeleteDialog, setBlockedDeleteDialog] = useState({
+    isOpen: false,
+    entityType: '',
+    entityName: '',
+    dependencies: null
+  });
   const { deleteState, openDialog, closeDialog, executeDelete } = useDelete();
 
   useEffect(() => {
@@ -82,7 +89,7 @@ function MasterData() {
     }
   };
 
-  const handleDelete = (item, type) => {
+  const handleDelete = async (item, type) => {
     const entityNames = {
       clients: 'Client',
       designs: 'Design',
@@ -97,6 +104,27 @@ function MasterData() {
       operators: item.name,
     };
 
+    // Check for dependencies first (only clients have this endpoint currently)
+    if (type === 'clients') {
+      try {
+        const depCheck = await api.clients.checkDependencies(item.id);
+
+        if (depCheck.data.hasDependencies) {
+          // BLOCK deletion - show informational dialog
+          setBlockedDeleteDialog({
+            isOpen: true,
+            entityType: entityNames[type],
+            entityName: displayNames[type],
+            dependencies: depCheck.data.dependencies
+          });
+          return;
+        }
+      } catch (error) {
+        console.error('Error checking dependencies:', error);
+      }
+    }
+
+    // No dependencies or not a client - show confirmation dialog for safe deletion
     openDialog(
       {
         id: item.id,
@@ -129,13 +157,17 @@ function MasterData() {
           loadData();
         } catch (error) {
           const errorMessage = error.response?.data?.error || error.message || 'Failed to delete';
+          const errorDetails = error.response?.data?.details || '';
 
           let userFriendlyMessage = `Unable to delete '${displayNames[type]}'.`;
 
-          if (errorMessage.toLowerCase().includes('foreign key') ||
+          if (errorDetails) {
+            userFriendlyMessage = errorDetails;
+          } else if (errorMessage.toLowerCase().includes('foreign key') ||
               errorMessage.toLowerCase().includes('constraint') ||
-              errorMessage.toLowerCase().includes('referenced')) {
-            userFriendlyMessage = `Unable to delete '${displayNames[type]}' because it is referenced by existing records. Remove those dependencies first.`;
+              errorMessage.toLowerCase().includes('referenced') ||
+              errorMessage.toLowerCase().includes('existing lots')) {
+            userFriendlyMessage = `Cannot delete '${displayNames[type]}' because it is associated with production records. Production-level data cannot be deleted from this interface.`;
           } else if (errorMessage.toLowerCase().includes('not found')) {
             userFriendlyMessage = `${entityNames[type]} '${displayNames[type]}' not found.`;
           }
@@ -474,6 +506,14 @@ function MasterData() {
         message="Are you sure you want to delete:"
         entityName={deleteState.item?.name}
         isLoading={deleteState.isLoading}
+      />
+
+      <BlockedDeleteDialog
+        isOpen={blockedDeleteDialog.isOpen}
+        onClose={() => setBlockedDeleteDialog({ ...blockedDeleteDialog, isOpen: false })}
+        entityType={blockedDeleteDialog.entityType}
+        entityName={blockedDeleteDialog.entityName}
+        dependencies={blockedDeleteDialog.dependencies}
       />
 
       <Notification

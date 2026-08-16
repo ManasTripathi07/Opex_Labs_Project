@@ -24,6 +24,7 @@ export const api = {
     create: (data) => client.post('/clients', data),
     update: (id, data) => client.put(`/clients/${id}`, data),
     delete: (id) => client.delete(`/clients/${id}`),
+    checkDependencies: (id) => client.get(`/clients/${id}/dependencies`),
   },
 
   designs: {
@@ -57,6 +58,7 @@ export const api = {
     create: (data) => client.post('/lots', data),
     update: (id, data) => client.put(`/lots/${id}`, data),
     delete: (id) => client.delete(`/lots/${id}`),
+    checkDependencies: (id) => client.get(`/lots/${id}/dependencies`),
   },
 
   sublots: {
