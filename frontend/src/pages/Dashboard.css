@@ -47,7 +47,10 @@
 }
 
 .enhanced-table thead {
-  background-color: var(--color-surface-elevated);
+  background: linear-gradient(135deg,
+    var(--color-bg-secondary) 0%,
+    rgba(59, 130, 246, 0.03) 100%
+  );
 }
 
 .enhanced-table th {
@@ -70,7 +73,10 @@
 }
 
 .enhanced-table tbody tr:hover {
-  background-color: var(--color-surface-hover);
+  background: linear-gradient(90deg,
+    rgba(59, 130, 246, 0.08) 0%,
+    rgba(59, 130, 246, 0.02) 100%
+  );
 }
 
 .enhanced-table tbody tr:last-child td {
@@ -206,6 +212,21 @@
     padding: var(--space-3);
   }
 }
+
+/* ============================================
+   DARK MODE ENHANCEMENTS
+   ============================================ */
+
+[data-theme="dark"] .enhanced-table tbody tr:hover {
+  background: linear-gradient(90deg,
+    rgba(59, 130, 246, 0.12) 0%,
+    rgba(59, 130, 246, 0.04) 100%
+  );
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
 
 @media (prefers-reduced-motion: reduce) {
   .status-overview-card,
