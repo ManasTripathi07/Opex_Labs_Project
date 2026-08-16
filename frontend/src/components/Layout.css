@@ -1,78 +1,279 @@
+/* ============================================
+   LAYOUT
+   ============================================ */
+
 .layout {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
+/* ============================================
+   NAVBAR
+   ============================================ */
+
 .navbar {
   background-color: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
   box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .navbar-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 var(--space-6);
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: var(--space-8);
   height: 64px;
 }
 
-.navbar-brand h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--color-primary);
-}
+/* ============================================
+   BRAND
+   ============================================ */
 
-.navbar-links {
+.navbar-brand {
   display: flex;
-  gap: 1rem;
-  flex: 1;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  letter-spacing: -0.02em;
+  user-select: none;
 }
 
-.navbar-links a {
-  padding: 0.5rem 1rem;
-  text-decoration: none;
-  color: var(--color-text-secondary);
-  font-weight: 500;
-  border-radius: var(--radius);
-  transition: all 0.2s;
-}
-
-.navbar-links a:hover {
-  background-color: var(--color-bg);
+.brand-text {
   color: var(--color-text);
 }
 
-.navbar-links a.active {
-  background-color: var(--color-primary);
-  color: var(--color-text-inverse);
+.brand-accent {
+  color: var(--color-primary);
+  font-weight: var(--font-semibold);
 }
+
+/* ============================================
+   DESKTOP NAVIGATION
+   ============================================ */
+
+.navbar-links {
+  display: flex;
+  gap: var(--space-1);
+  flex: 1;
+  align-items: center;
+}
+
+.nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  text-decoration: none;
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  border-radius: var(--radius);
+  transition: all var(--transition-fast);
+}
+
+.nav-link:hover {
+  color: var(--color-text);
+  background-color: var(--color-bg-secondary);
+}
+
+.nav-link.active {
+  color: var(--color-primary);
+  background-color: rgba(37, 99, 235, 0.08);
+}
+
+[data-theme="dark"] .nav-link.active {
+  background-color: rgba(59, 130, 246, 0.12);
+}
+
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nav-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.nav-label {
+  white-space: nowrap;
+}
+
+.nav-indicator {
+  position: absolute;
+  bottom: 0;
+  left: var(--space-2);
+  right: var(--space-2);
+  height: 2px;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-full);
+}
+
+/* ============================================
+   NAVBAR ACTIONS
+   ============================================ */
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.mobile-menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius);
+  background-color: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.mobile-menu-toggle:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.mobile-menu-toggle:focus {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.mobile-menu-toggle svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ============================================
+   MOBILE MENU
+   ============================================ */
+
+.mobile-menu {
+  overflow: hidden;
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+}
+
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-6);
+  text-decoration: none;
+  color: var(--color-text-secondary);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  border-bottom: 1px solid var(--color-border);
+  transition: all var(--transition-fast);
+}
+
+.mobile-nav-link:hover {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text);
+}
+
+.mobile-nav-link.active {
+  color: var(--color-primary);
+  background-color: rgba(37, 99, 235, 0.08);
+  border-left: 3px solid var(--color-primary);
+}
+
+[data-theme="dark"] .mobile-nav-link.active {
+  background-color: rgba(59, 130, 246, 0.12);
+}
+
+.mobile-nav-link .nav-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* ============================================
+   MAIN CONTENT
+   ============================================ */
 
 .main-content {
   flex: 1;
-  padding: 2rem;
+  padding: var(--space-8) var(--space-6);
   max-width: 1400px;
   width: 100%;
   margin: 0 auto;
 }
 
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .navbar-container {
+    gap: var(--space-4);
+  }
+
+  .nav-label {
+    display: none;
+  }
+
+  .nav-link {
+    padding: var(--space-2);
+  }
+
+  .nav-indicator {
+    left: var(--space-1);
+    right: var(--space-1);
+  }
+}
+
 @media (max-width: 768px) {
   .navbar-container {
-    flex-direction: column;
-    height: auto;
-    padding: 1rem;
-    gap: 1rem;
+    padding: 0 var(--space-4);
+    height: 56px;
+  }
+
+  .navbar-brand {
+    font-size: var(--text-lg);
   }
 
   .navbar-links {
-    flex-wrap: wrap;
-    justify-content: center;
+    display: none;
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
   }
 
   .main-content {
-    padding: 1rem;
+    padding: var(--space-6) var(--space-4);
+  }
+}
+
+/* ============================================
+   ANIMATIONS - RESPECT REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link,
+  .mobile-nav-link,
+  .mobile-menu-toggle,
+  .main-content {
+    transition: none !important;
+  }
+
+  .nav-indicator {
+    transition: none !important;
   }
 }
