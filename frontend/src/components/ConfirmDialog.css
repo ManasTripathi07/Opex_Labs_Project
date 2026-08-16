@@ -1,0 +1,130 @@
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+[data-theme="dark"] .dialog-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.dialog-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  padding: var(--space-4);
+}
+
+.dialog {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-8);
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+}
+
+.dialog-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--space-6);
+  border-radius: var(--radius-full);
+  background-color: var(--alert-error-bg);
+  color: var(--alert-error-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.dialog-title {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text);
+  margin: 0 0 var(--space-4);
+}
+
+.dialog-message {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--space-4);
+  line-height: var(--leading-relaxed);
+}
+
+.dialog-entity {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--color-text);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius);
+  margin-bottom: var(--space-4);
+  word-break: break-word;
+}
+
+.dialog-warning {
+  font-size: var(--text-sm);
+  color: var(--alert-error-text);
+  margin: 0 0 var(--space-6);
+}
+
+.dialog-actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+}
+
+.dialog-actions .btn {
+  min-width: 120px;
+}
+
+@media (max-width: 768px) {
+  .dialog {
+    padding: var(--space-6);
+  }
+
+  .dialog-icon {
+    width: 56px;
+    height: 56px;
+    margin-bottom: var(--space-4);
+  }
+
+  .dialog-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .dialog-title {
+    font-size: var(--text-xl);
+  }
+
+  .dialog-actions {
+    flex-direction: column-reverse;
+  }
+
+  .dialog-actions .btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog,
+  .dialog-overlay {
+    transition: none !important;
+  }
+}
