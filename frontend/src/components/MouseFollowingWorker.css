@@ -1,0 +1,627 @@
+/* ============================================
+   SLEEPING WORKER CONTAINER
+   ============================================ */
+
+.sleeping-worker-container {
+  position: fixed;
+  top: 6px;
+  right: 20px;
+  z-index: 1002;
+  pointer-events: auto;
+  user-select: none;
+  cursor: pointer;
+}
+
+.sleeping-worker {
+  width: 50px;
+  height: 52px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+}
+
+/* ============================================
+   SPEECH BUBBLE - "Hi!" on hover (below mouth)
+   ============================================ */
+
+.speech-bubble {
+  position: absolute;
+  top: 58px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  padding: 6px 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15),
+              0 0 0 2px rgba(59, 130, 246, 0.3);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.speech-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  animation: wave-text 0.6s ease-in-out infinite;
+}
+
+@keyframes wave-text {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Speech bubble tail - now pointing UP to mouth */
+.speech-tail {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #ffffff;
+  filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.1));
+}
+
+/* Show speech bubble on hover */
+.sleeping-worker-container:hover .speech-bubble {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+/* Dark mode speech bubble */
+[data-theme="dark"] .speech-bubble {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4),
+              0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+[data-theme="dark"] .speech-text {
+  color: #f1f5f9;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .speech-tail {
+  border-bottom-color: #1e293b;
+}
+
+/* ============================================
+   HARD HAT
+   ============================================ */
+
+.worker-hat {
+  position: relative;
+  width: 42px;
+  height: 22px;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2),
+              inset 0 1px 2px rgba(255, 255, 255, 0.4);
+  z-index: 3;
+  overflow: hidden;
+}
+
+/* Hat brim */
+.worker-hat::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 6px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hat-shine {
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  width: 12px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  filter: blur(2px);
+}
+
+.hat-stripe {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 3px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+}
+
+/* ============================================
+   HEAD
+   ============================================ */
+
+.worker-head {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #fcd9b9 0%, #f5c995 100%);
+  border-radius: 45%;
+  margin-top: -4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2),
+              inset 0 1px 3px rgba(255, 255, 255, 0.4),
+              inset 0 -1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  z-index: 2;
+  transform-style: preserve-3d;
+  transition: transform 0.05s cubic-bezier(0.25, 0.1, 0.25, 1);
+  will-change: transform;
+}
+
+/* ============================================
+   EYES
+   ============================================ */
+
+.worker-eyes {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+}
+
+.worker-eye {
+  width: 13px;
+  height: 13px;
+  position: relative;
+  animation: eye-glow 3s ease-in-out infinite;
+}
+
+@keyframes eye-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 2px rgba(59, 130, 246, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.5));
+  }
+}
+
+.eye-white {
+  width: 100%;
+  height: 100%;
+  background: white;
+  border-radius: 50%;
+  position: relative;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15),
+              0 1px 2px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.worker-pupil {
+  width: 7px;
+  height: 7px;
+  background: radial-gradient(circle at 35% 35%, #1e293b 0%, #0f172a 100%);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.05s cubic-bezier(0.25, 0.1, 0.25, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5),
+              0 0 8px rgba(59, 130, 246, 0.2);
+  animation: pupil-pulse 2s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes pupil-pulse {
+  0%, 100% {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5),
+                0 0 8px rgba(59, 130, 246, 0.2);
+  }
+  50% {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5),
+                0 0 12px rgba(59, 130, 246, 0.4);
+  }
+}
+
+.pupil-shine {
+  position: absolute;
+  top: 1.5px;
+  left: 1.5px;
+  width: 3px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  animation: shine-twinkle 3s ease-in-out infinite;
+}
+
+@keyframes shine-twinkle {
+  0%, 100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Eyelids for blinking */
+.eyelid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  background: #fcd9b9;
+  border-radius: 50%;
+  transition: height 0.1s ease;
+  z-index: 2;
+}
+
+.worker-eyes.blinking .eyelid {
+  height: 100%;
+}
+
+/* ============================================
+   EYEBROWS
+   ============================================ */
+
+.eyebrow {
+  position: absolute;
+  top: 6px;
+  width: 11px;
+  height: 2.5px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 2px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.left-eyebrow {
+  left: 6px;
+  transform: rotate(-8deg);
+}
+
+.right-eyebrow {
+  right: 6px;
+  transform: rotate(8deg);
+}
+
+/* ============================================
+   NOSE
+   ============================================ */
+
+.worker-nose {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 5px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 50%;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   CHEEKS (Blush)
+   ============================================ */
+
+.cheek {
+  position: absolute;
+  top: 20px;
+  width: 8px;
+  height: 6px;
+  background: radial-gradient(ellipse at center, rgba(255, 150, 150, 0.4) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: blush-pulse 3s ease-in-out infinite;
+}
+
+.left-cheek {
+  left: 3px;
+}
+
+.right-cheek {
+  right: 3px;
+}
+
+@keyframes blush-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.1);
+  }
+}
+
+/* ============================================
+   SMILING MOUTH WITH LIPS
+   ============================================ */
+
+.worker-mouth-smile {
+  position: absolute;
+  top: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Upper lip - curved upward smile */
+.upper-lip {
+  position: absolute;
+  top: 0;
+  width: 16px;
+  height: 5px;
+  border: 2px solid transparent;
+  border-bottom: 2px solid #d97070;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  transform: translateY(2px);
+}
+
+/* Lower lip - fuller bottom */
+.lower-lip {
+  position: absolute;
+  bottom: -1px;
+  width: 14px;
+  height: 4px;
+  background: linear-gradient(180deg, #e88888 0%, #d97070 100%);
+  border-radius: 0 0 8px 8px;
+  box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.15),
+              0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Mouth opening - the smile curve */
+.mouth-opening {
+  position: absolute;
+  top: 2px;
+  width: 16px;
+  height: 6px;
+  border: 1.5px solid rgba(0, 0, 0, 0.25);
+  border-top: none;
+  border-radius: 0 0 16px 16px / 0 0 8px 8px;
+  background: linear-gradient(180deg,
+    rgba(200, 100, 100, 0.2) 0%,
+    rgba(180, 80, 80, 0.1) 100%
+  );
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
+  animation: smile-gentle 4s ease-in-out infinite;
+}
+
+/* Gentle smile animation */
+@keyframes smile-gentle {
+  0%, 100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(1.05);
+  }
+}
+
+/* ============================================
+   HOVER ANIMATIONS
+   ============================================ */
+
+@media (prefers-reduced-motion: no-preference) {
+  .sleeping-worker-container:hover .sleeping-worker {
+    animation: worker-bounce 0.6s ease-in-out;
+  }
+
+  @keyframes worker-bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    25% {
+      transform: translateY(-3px) scale(1.02);
+    }
+    50% {
+      transform: translateY(-5px) scale(1.05);
+    }
+    75% {
+      transform: translateY(-3px) scale(1.02);
+    }
+  }
+
+  .sleeping-worker-container:hover .worker-hat {
+    animation: hat-wiggle 0.4s ease-in-out;
+  }
+
+  @keyframes hat-wiggle {
+    0%, 100% {
+      transform: rotate(0deg);
+    }
+    25% {
+      transform: rotate(-5deg);
+    }
+    75% {
+      transform: rotate(5deg);
+    }
+  }
+
+  /* Make eyes more expressive on hover */
+  .sleeping-worker-container:hover .worker-eye {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+  }
+
+  /* Cheeks blush more on hover */
+  .sleeping-worker-container:hover .cheek {
+    animation: blush-hover 1s ease-in-out infinite;
+  }
+
+  @keyframes blush-hover {
+    0%, 100% {
+      opacity: 0.8;
+      transform: scale(1.1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+
+  /* Smile widens on hover */
+  .sleeping-worker-container:hover .mouth-opening {
+    animation: smile-wide 0.5s ease-in-out forwards;
+  }
+
+  @keyframes smile-wide {
+    0% {
+      transform: scaleX(1);
+    }
+    100% {
+      transform: scaleX(1.15);
+    }
+  }
+
+  /* Eyebrows raise slightly on hover */
+  .sleeping-worker-container:hover .eyebrow {
+    animation: eyebrow-raise 0.3s ease-out forwards;
+  }
+
+  @keyframes eyebrow-raise {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-1px);
+    }
+  }
+
+  .sleeping-worker-container:hover .left-eyebrow {
+    animation: left-eyebrow-raise 0.3s ease-out forwards;
+  }
+
+  @keyframes left-eyebrow-raise {
+    0% {
+      transform: rotate(-8deg) translateY(0);
+    }
+    100% {
+      transform: rotate(-8deg) translateY(-1px);
+    }
+  }
+
+  .sleeping-worker-container:hover .right-eyebrow {
+    animation: right-eyebrow-raise 0.3s ease-out forwards;
+  }
+
+  @keyframes right-eyebrow-raise {
+    0% {
+      transform: rotate(8deg) translateY(0);
+    }
+    100% {
+      transform: rotate(8deg) translateY(-1px);
+    }
+  }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+[data-theme="dark"] .sleeping-worker {
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.5));
+}
+
+[data-theme="dark"] .worker-hat {
+  background: linear-gradient(135deg, #fcd34d 0%, #fbbf24 100%);
+}
+
+[data-theme="dark"] .worker-hat::after {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+}
+
+[data-theme="dark"] .worker-head {
+  background: linear-gradient(135deg, #f5c995 0%, #f0b67a 100%);
+}
+
+[data-theme="dark"] .cheek {
+  background: radial-gradient(ellipse at center, rgba(255, 170, 170, 0.5) 0%, transparent 70%);
+}
+
+[data-theme="dark"] .upper-lip {
+  border-bottom-color: #e98080;
+}
+
+[data-theme="dark"] .lower-lip {
+  background: linear-gradient(180deg, #f09090 0%, #e98080 100%);
+}
+
+[data-theme="dark"] .mouth-opening {
+  border-color: rgba(0, 0, 0, 0.35);
+  background: linear-gradient(180deg,
+    rgba(220, 120, 120, 0.25) 0%,
+    rgba(200, 100, 100, 0.15) 100%
+  );
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .sleeping-worker-container {
+    right: 70px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sleeping-worker-container {
+    right: 50px;
+    transform: scale(0.9);
+  }
+}
+
+@media (max-width: 480px) {
+  .sleeping-worker-container {
+    display: none;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .worker-pupil,
+  .eyelid,
+  .worker-head {
+    transition: none !important;
+  }
+
+  .sleeping-worker,
+  .worker-hat,
+  .cheek,
+  .mouth-opening,
+  .worker-eye,
+  .pupil-shine,
+  .speech-text {
+    animation: none !important;
+  }
+
+  .speech-bubble {
+    transition: opacity 0.2s ease !important;
+  }
+}

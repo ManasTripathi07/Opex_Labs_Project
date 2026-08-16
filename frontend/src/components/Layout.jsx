@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import ThemeToggle from './ThemeToggle';
+import MouseFollowingWorker from './MouseFollowingWorker';
 import './Layout.css';
 
 const navItems = [
@@ -57,6 +58,7 @@ function Layout() {
 
   return (
     <div className="layout">
+      <MouseFollowingWorker />
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-brand">
