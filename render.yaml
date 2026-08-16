@@ -21,4 +21,3 @@ services:
 databases:
   - name: production-tracker-db
     databaseName: production_tracker
-    user: postgres
