@@ -37,6 +37,23 @@ function InboundUI() {
     }
   };
 
+  const handleAllocateSubLot = async (lotId) => {
+    try {
+      const lotDetails = await api.lots.get(lotId);
+
+      for (const subLot of lotDetails.data.subLots) {
+        if (subLot.state === 'received') {
+          await api.sublots.updateState(subLot.id, 'allocated');
+        }
+      }
+
+      setSuccess('Sub-lots allocated successfully!');
+      loadData();
+    } catch (error) {
+      setError(error.response?.data?.error || 'Failed to allocate sub-lots');
+    }
+  };
+
   const addSubLot = () => {
     setFormData({
       ...formData,
@@ -227,6 +244,7 @@ function InboundUI() {
                 <th>Total Pieces</th>
                 <th>Received Date</th>
                 <th>Sub-Lots</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -237,6 +255,15 @@ function InboundUI() {
                   <td>{lot.total_pieces}</td>
                   <td>{format(new Date(lot.received_date), 'MMM dd, yyyy')}</td>
                   <td>{lot.subLots?.length || 0}</td>
+                  <td>
+                    <button
+                      className="btn btn-primary"
+                      style={{ padding: '0.25rem 0.75rem', fontSize: '0.8rem' }}
+                      onClick={() => handleAllocateSubLot(lot.id)}
+                    >
+                      Allocate
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
