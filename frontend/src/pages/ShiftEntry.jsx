@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../api/client';
 import { format } from 'date-fns';
 import './ShiftEntry.css';
 
 function ShiftEntry() {
   const { machineId } = useParams();
+  const navigate = useNavigate();
   const [machine, setMachine] = useState(null);
   const [assignment, setAssignment] = useState(null);
   const [operators, setOperators] = useState([]);
@@ -109,6 +110,17 @@ function ShiftEntry() {
   if (!assignment) {
     return (
       <div className="shift-entry">
+        <button
+          className="shift-back-button"
+          onClick={() => navigate('/dashboard')}
+          type="button"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Back to Dashboard
+        </button>
         <div className="shift-card">
           <h1>No Active Assignment</h1>
           <p>Machine {machine?.identifier} has no active assignment.</p>
@@ -119,6 +131,18 @@ function ShiftEntry() {
 
   return (
     <div className="shift-entry">
+      <button
+        className="shift-back-button"
+        onClick={() => navigate('/dashboard')}
+        type="button"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to Dashboard
+      </button>
+
       <div className="shift-header">
         <h1>{machine.identifier}</h1>
         <div className="shift-subtitle">{machine.name}</div>
