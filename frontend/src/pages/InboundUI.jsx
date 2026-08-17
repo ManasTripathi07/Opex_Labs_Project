@@ -340,7 +340,7 @@ function InboundUI() {
                   <td>{lot.client_name}</td>
                   <td>{lot.total_pieces}</td>
                   <td>{format(new Date(lot.received_date), 'MMM dd, yyyy')}</td>
-                  <td>{lot.subLots?.length || 0}</td>
+                  <td>{lot.sublot_count || 0}</td>
                   <td>
                     <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                       <button

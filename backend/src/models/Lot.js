@@ -3,9 +3,10 @@ import { query, getClient } from '../db/connection.js';
 export class Lot {
   static async findAll({ clientId = null, fromDate = null, toDate = null } = {}) {
     let sql = `
-      SELECT l.*, c.name as client_name
+      SELECT l.*, c.name as client_name, COUNT(sl.id) as sublot_count
       FROM lots l
       JOIN clients c ON l.client_id = c.id
+      LEFT JOIN sub_lots sl ON sl.lot_id = l.id
       WHERE 1=1
     `;
     const params = [];
@@ -29,7 +30,7 @@ export class Lot {
       paramCount++;
     }
 
-    sql += ' ORDER BY l.received_date DESC, l.lot_number DESC';
+    sql += ' GROUP BY l.id, c.name ORDER BY l.received_date DESC, l.lot_number DESC';
 
     const result = await query(sql, params);
     return result.rows;
