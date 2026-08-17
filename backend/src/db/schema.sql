@@ -149,11 +149,27 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+-- Create triggers (drop first to make idempotent)
+DROP TRIGGER IF EXISTS update_clients_updated_at ON clients;
 CREATE TRIGGER update_clients_updated_at BEFORE UPDATE ON clients FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_designs_updated_at ON designs;
 CREATE TRIGGER update_designs_updated_at BEFORE UPDATE ON designs FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_machines_updated_at ON machines;
 CREATE TRIGGER update_machines_updated_at BEFORE UPDATE ON machines FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_operators_updated_at ON operators;
 CREATE TRIGGER update_operators_updated_at BEFORE UPDATE ON operators FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_lots_updated_at ON lots;
 CREATE TRIGGER update_lots_updated_at BEFORE UPDATE ON lots FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_sub_lots_updated_at ON sub_lots;
 CREATE TRIGGER update_sub_lots_updated_at BEFORE UPDATE ON sub_lots FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_assignments_updated_at ON assignments;
 CREATE TRIGGER update_assignments_updated_at BEFORE UPDATE ON assignments FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_shift_logs_updated_at ON shift_logs;
 CREATE TRIGGER update_shift_logs_updated_at BEFORE UPDATE ON shift_logs FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
