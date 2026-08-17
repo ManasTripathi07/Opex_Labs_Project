@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS clients (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_clients_name ON clients(name);
+CREATE INDEX IF NOT EXISTS idx_clients_name ON clients(name);
 
 -- Designs
 CREATE TABLE IF NOT EXISTS designs (
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS designs (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_designs_identifier ON designs(identifier);
+CREATE INDEX IF NOT EXISTS idx_designs_identifier ON designs(identifier);
 
 -- Machines
 CREATE TABLE IF NOT EXISTS machines (
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS machines (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_machines_identifier ON machines(identifier);
+CREATE INDEX IF NOT EXISTS idx_machines_identifier ON machines(identifier);
 
 -- Machine Design Rotations (pieces per round per design)
 CREATE TABLE IF NOT EXISTS machine_design_rotations (
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS operators (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_operators_name ON operators(name);
+CREATE INDEX IF NOT EXISTS idx_operators_name ON operators(name);
 
 -- Lots
 CREATE TABLE IF NOT EXISTS lots (
@@ -66,8 +66,8 @@ CREATE TABLE IF NOT EXISTS lots (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_lots_lot_number ON lots(lot_number);
-CREATE INDEX idx_lots_client_id ON lots(client_id);
+CREATE INDEX IF NOT EXISTS idx_lots_lot_number ON lots(lot_number);
+CREATE INDEX IF NOT EXISTS idx_lots_client_id ON lots(client_id);
 
 -- Sub-lots
 CREATE TABLE IF NOT EXISTS sub_lots (
@@ -81,9 +81,9 @@ CREATE TABLE IF NOT EXISTS sub_lots (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_sub_lots_lot_id ON sub_lots(lot_id);
-CREATE INDEX idx_sub_lots_state ON sub_lots(state);
-CREATE INDEX idx_sub_lots_design_id ON sub_lots(design_id);
+CREATE INDEX IF NOT EXISTS idx_sub_lots_lot_id ON sub_lots(lot_id);
+CREATE INDEX IF NOT EXISTS idx_sub_lots_state ON sub_lots(state);
+CREATE INDEX IF NOT EXISTS idx_sub_lots_design_id ON sub_lots(design_id);
 
 -- State Transition Log for audit trail
 CREATE TABLE IF NOT EXISTS sub_lot_state_transitions (
@@ -108,9 +108,9 @@ CREATE TABLE IF NOT EXISTS assignments (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_assignments_machine_id ON assignments(machine_id);
-CREATE INDEX idx_assignments_sub_lot_id ON assignments(sub_lot_id);
-CREATE INDEX idx_assignments_status ON assignments(status);
+CREATE INDEX IF NOT EXISTS idx_assignments_machine_id ON assignments(machine_id);
+CREATE INDEX IF NOT EXISTS idx_assignments_sub_lot_id ON assignments(sub_lot_id);
+CREATE INDEX IF NOT EXISTS idx_assignments_status ON assignments(status);
 
 -- Shift Logs (Core complexity - tracks production output)
 CREATE TABLE IF NOT EXISTS shift_logs (
@@ -134,11 +134,11 @@ CREATE TABLE IF NOT EXISTS shift_logs (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_shift_logs_machine_id ON shift_logs(machine_id);
-CREATE INDEX idx_shift_logs_operator_id ON shift_logs(operator_id);
-CREATE INDEX idx_shift_logs_design_id ON shift_logs(design_id);
-CREATE INDEX idx_shift_logs_shift_date ON shift_logs(shift_date);
-CREATE INDEX idx_shift_logs_machine_date_shift ON shift_logs(machine_id, shift_date, shift_type);
+CREATE INDEX IF NOT EXISTS idx_shift_logs_machine_id ON shift_logs(machine_id);
+CREATE INDEX IF NOT EXISTS idx_shift_logs_operator_id ON shift_logs(operator_id);
+CREATE INDEX IF NOT EXISTS idx_shift_logs_design_id ON shift_logs(design_id);
+CREATE INDEX IF NOT EXISTS idx_shift_logs_shift_date ON shift_logs(shift_date);
+CREATE INDEX IF NOT EXISTS idx_shift_logs_machine_date_shift ON shift_logs(machine_id, shift_date, shift_type);
 
 -- Trigger to auto-update updated_at timestamps
 CREATE OR REPLACE FUNCTION update_updated_at_column()
