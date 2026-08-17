@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Factory building body -->
+  <rect x="8" y="24" width="48" height="32" fill="#2563eb" rx="2"/>
+
+  <!-- Factory smokestack -->
+  <rect x="44" y="12" width="8" height="16" fill="#1e40af" rx="1"/>
+
+  <!-- Smoke -->
+  <circle cx="46" cy="8" r="3" fill="#94a3b8" opacity="0.6"/>
+  <circle cx="50" cy="6" r="3.5" fill="#94a3b8" opacity="0.5"/>
+  <circle cx="54" cy="8" r="3" fill="#94a3b8" opacity="0.4"/>
+
+  <!-- Windows grid (3x3) -->
+  <rect x="14" y="30" width="6" height="6" fill="#dbeafe" rx="0.5"/>
+  <rect x="23" y="30" width="6" height="6" fill="#dbeafe" rx="0.5"/>
+  <rect x="32" y="30" width="6" height="6" fill="#dbeafe" rx="0.5"/>
+
+  <rect x="14" y="39" width="6" height="6" fill="#dbeafe" rx="0.5"/>
+  <rect x="23" y="39" width="6" height="6" fill="#dbeafe" rx="0.5"/>
+  <rect x="32" y="39" width="6" height="6" fill="#dbeafe" rx="0.5"/>
+
+  <rect x="14" y="48" width="6" height="6" fill="#dbeafe" rx="0.5"/>
+  <rect x="23" y="48" width="6" height="6" fill="#dbeafe" rx="0.5"/>
+  <rect x="32" y="48" width="6" height="6" fill="#dbeafe" rx="0.5"/>
+
+  <!-- Factory door -->
+  <rect x="42" y="44" width="10" height="12" fill="#1e3a8a" rx="1"/>
+
+  <!-- Ground/base -->
+  <rect x="4" y="56" width="56" height="4" fill="#334155" rx="1"/>
+</svg>
