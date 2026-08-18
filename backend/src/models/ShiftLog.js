@@ -69,7 +69,7 @@ export class ShiftLog {
 
   static async getPreviousRunningStitches(machineId, designId, beforeDate = null, beforeShiftType = null) {
     let sql = `
-      SELECT current_running_stitches
+      SELECT current_running_stitches, shift_date, shift_type
       FROM shift_logs
       WHERE machine_id = $1 AND design_id = $2
     `;
@@ -92,9 +92,22 @@ export class ShiftLog {
       paramCount++;
     }
 
-    sql += ' ORDER BY shift_date DESC, created_at DESC LIMIT 1';
+    sql += ` ORDER BY shift_date DESC,
+      CASE
+        WHEN shift_type = 'night' THEN 3
+        WHEN shift_type = 'afternoon' THEN 2
+        WHEN shift_type = 'morning' THEN 1
+      END DESC,
+      created_at DESC
+      LIMIT 1`;
+
+    console.log('🔍 SQL Query:', sql);
+    console.log('🔍 Params:', params);
 
     const result = await query(sql, params);
+
+    console.log('🔍 Query result:', result.rows[0]);
+
     return result.rows[0]?.current_running_stitches || 0;
   }
 

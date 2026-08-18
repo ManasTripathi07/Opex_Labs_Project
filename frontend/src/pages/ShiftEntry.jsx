@@ -54,15 +54,25 @@ function ShiftEntry() {
 
   const loadPreviousRunning = async () => {
     try {
+      console.log('Loading previous running with params:', {
+        machineId,
+        designId: assignment.design_id,
+        beforeDate: formData.shiftDate,
+        beforeShiftType: formData.shiftType,
+      });
+
       const res = await api.shiftLogs.getPreviousRunning({
         machineId,
         designId: assignment.design_id,
         beforeDate: formData.shiftDate,
         beforeShiftType: formData.shiftType,
       });
+
+      console.log('Previous running response:', res.data);
       setPreviousRunning(res.data.previousRunningStitches);
     } catch (error) {
       console.error('Failed to load previous running:', error);
+      setPreviousRunning(0); // Set to 0 on error
     }
   };
 
@@ -72,6 +82,9 @@ function ShiftEntry() {
     setError('');
     setSuccess(false);
 
+    const submittedCounter = parseInt(formData.currentRunningStitches);
+    console.log('🚀 Submitting shift with counter:', submittedCounter);
+
     try {
       await api.shiftLogs.create({
         machineId: parseInt(machineId),
@@ -80,11 +93,18 @@ function ShiftEntry() {
         assignmentId: assignment.id,
         shiftDate: formData.shiftDate,
         shiftType: formData.shiftType,
-        currentRunningStitches: parseInt(formData.currentRunningStitches),
+        currentRunningStitches: submittedCounter,
         roundsCompleted: parseInt(formData.roundsCompleted),
       });
 
+      console.log('✅ Shift submitted successfully!');
       setSuccess(true);
+
+      // Reload previous running to show the just-submitted counter as the new "previous"
+      console.log('🔄 Reloading previous counter...');
+      await loadPreviousRunning();
+      console.log('✅ Previous counter updated! Next shift should show:', submittedCounter);
+
       setFormData({
         ...formData,
         currentRunningStitches: '',
@@ -216,10 +236,33 @@ function ShiftEntry() {
           </div>
         </div>
 
-        <div className="shift-card">
+        <div className="shift-card" style={{
+          border: '2px solid var(--color-primary)',
+          backgroundColor: 'rgba(59, 130, 246, 0.03)',
+          transition: 'all 0.3s ease'
+        }}>
           <div className="shift-info">
-            <div className="info-label">Previous Counter</div>
-            <div className="info-value previous-value">{previousRunning.toLocaleString()}</div>
+            <div className="info-label" style={{ fontSize: '1.125rem', fontWeight: '600' }}>
+              📊 Previous Counter Reading
+            </div>
+            <div className="info-value previous-value" style={{
+              transition: 'all 0.3s ease',
+              animation: previousRunning > 0 ? 'pulse 0.5s ease' : 'none'
+            }}>
+              {previousRunning.toLocaleString()}
+            </div>
+          </div>
+          <div style={{
+            marginTop: '0.75rem',
+            paddingTop: '0.75rem',
+            borderTop: '1px solid var(--color-border)',
+            fontSize: '0.875rem',
+            color: 'var(--color-text-secondary)',
+            fontStyle: 'italic'
+          }}>
+            {previousRunning === 0
+              ? 'No previous shift found. This will be the starting counter.'
+              : 'This is the last counter reading. Enter your current reading below.'}
           </div>
         </div>
 

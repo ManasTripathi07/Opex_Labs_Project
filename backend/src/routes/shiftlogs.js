@@ -24,16 +24,21 @@ router.get('/previous-running', async (req, res) => {
   try {
     const { machineId, designId, beforeDate, beforeShiftType } = req.query;
 
+    console.log('📊 Previous running request (raw):', { machineId, designId, beforeDate, beforeShiftType });
+
     if (!machineId || !designId) {
       return res.status(400).json({ error: 'Machine ID and design ID are required' });
     }
 
+    // Convert to integers to ensure proper comparison
     const previousRunning = await ShiftLog.getPreviousRunningStitches(
-      machineId,
-      designId,
+      parseInt(machineId),
+      parseInt(designId),
       beforeDate,
       beforeShiftType
     );
+
+    console.log('📊 Previous running result:', previousRunning);
     res.json({ previousRunningStitches: previousRunning });
   } catch (error) {
     console.error('Error fetching previous running stitches:', error);
