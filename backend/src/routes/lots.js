@@ -4,6 +4,17 @@ import { query } from '../db/connection.js';
 
 const router = express.Router();
 
+// Get next available lot number (Phase 1: Input Standardization)
+router.get('/next-lot-number', async (req, res) => {
+  try {
+    const nextLotNumber = await Lot.generateLotNumber();
+    res.json({ nextLotNumber });
+  } catch (error) {
+    console.error('Error generating next lot number:', error);
+    res.status(500).json({ error: 'Failed to generate lot number' });
+  }
+});
+
 router.get('/', async (req, res) => {
   try {
     const { clientId, fromDate, toDate } = req.query;
@@ -32,9 +43,23 @@ router.post('/', async (req, res) => {
   try {
     const { lotNumber, clientId, totalPieces, receivedDate, subLots } = req.body;
 
-    if (!lotNumber || !clientId || !totalPieces || !receivedDate) {
+    // Phase 1: Reject manual lot number specification
+    if (lotNumber !== undefined) {
       return res.status(400).json({
-        error: 'Lot number, client ID, total pieces, and received date are required',
+        error: 'Lot number cannot be manually specified. It is generated automatically.',
+      });
+    }
+
+    // Phase 1: Reject manual sub-lot number specification
+    if (subLots && subLots.some(sl => sl.subLotNumber !== undefined)) {
+      return res.status(400).json({
+        error: 'Sub-lot numbers cannot be manually specified. They are generated automatically.',
+      });
+    }
+
+    if (!clientId || !totalPieces || !receivedDate) {
+      return res.status(400).json({
+        error: 'Client ID, total pieces, and received date are required',
       });
     }
 
@@ -43,7 +68,6 @@ router.post('/', async (req, res) => {
     }
 
     const lot = await Lot.create({
-      lotNumber,
       clientId,
       totalPieces,
       receivedDate,

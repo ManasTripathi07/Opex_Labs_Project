@@ -93,36 +93,30 @@ async function seed() {
     const today = new Date().toISOString().split('T')[0];
     const lots = await Promise.all([
       Lot.create({
-        lotNumber: 'LOT-2024-001',
         clientId: clients[0].id,
         totalPieces: 1000,
         receivedDate: today,
         subLots: [
           {
-            subLotNumber: 'LOT-2024-001-A',
             designId: designs[0].id,
             pieceCount: 600,
           },
           {
-            subLotNumber: 'LOT-2024-001-B',
             designId: designs[1].id,
             pieceCount: 400,
           },
         ],
       }),
       Lot.create({
-        lotNumber: 'LOT-2024-002',
         clientId: clients[1].id,
         totalPieces: 1500,
         receivedDate: today,
         subLots: [
           {
-            subLotNumber: 'LOT-2024-002-A',
             designId: designs[2].id,
             pieceCount: 800,
           },
           {
-            subLotNumber: 'LOT-2024-002-B',
             designId: designs[3].id,
             pieceCount: 700,
           },

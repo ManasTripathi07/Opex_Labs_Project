@@ -13,8 +13,8 @@ function InboundUI() {
   const [clients, setClients] = useState([]);
   const [designs, setDesigns] = useState([]);
   const [showNewLotForm, setShowNewLotForm] = useState(false);
+  const [nextLotNumber, setNextLotNumber] = useState('');
   const [formData, setFormData] = useState({
-    lotNumber: '',
     clientId: '',
     totalPieces: '',
     receivedDate: format(new Date(), 'yyyy-MM-dd'),
@@ -35,6 +35,12 @@ function InboundUI() {
     loadData();
   }, []);
 
+  useEffect(() => {
+    if (showNewLotForm) {
+      loadNextLotNumber();
+    }
+  }, [showNewLotForm]);
+
   const loadData = async () => {
     try {
       const [lotsRes, clientsRes, designsRes] = await Promise.all([
@@ -47,6 +53,16 @@ function InboundUI() {
       setDesigns(designsRes.data);
     } catch (error) {
       console.error('Error loading data:', error);
+    }
+  };
+
+  const loadNextLotNumber = async () => {
+    try {
+      const response = await api.lots.getNextLotNumber();
+      setNextLotNumber(response.data.nextLotNumber);
+    } catch (error) {
+      console.error('Error loading next lot number:', error);
+      setError('Failed to load next lot number');
     }
   };
 
@@ -70,7 +86,7 @@ function InboundUI() {
   const addSubLot = () => {
     setFormData({
       ...formData,
-      subLots: [...formData.subLots, { subLotNumber: '', designId: '', pieceCount: '' }],
+      subLots: [...formData.subLots, { designId: '', pieceCount: '' }],
     });
   };
 
@@ -100,12 +116,10 @@ function InboundUI() {
 
     try {
       await api.lots.create({
-        lotNumber: formData.lotNumber,
         clientId: parseInt(formData.clientId),
         totalPieces,
         receivedDate: formData.receivedDate,
         subLots: formData.subLots.map((sl) => ({
-          subLotNumber: sl.subLotNumber,
           designId: parseInt(sl.designId),
           pieceCount: parseInt(sl.pieceCount),
         })),
@@ -113,7 +127,6 @@ function InboundUI() {
 
       setSuccess('Lot created successfully!');
       setFormData({
-        lotNumber: '',
         clientId: '',
         totalPieces: '',
         receivedDate: format(new Date(), 'yyyy-MM-dd'),
@@ -121,6 +134,7 @@ function InboundUI() {
       });
       setShowNewLotForm(false);
       loadData();
+      loadNextLotNumber();
     } catch (error) {
       setError(error.response?.data?.error || 'Failed to create lot');
     }
@@ -217,14 +231,24 @@ function InboundUI() {
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-2" style={{ marginBottom: '1.5rem' }}>
               <div>
-                <label className="label">Lot Number *</label>
-                <input
-                  type="text"
+                <label className="label">Lot Number</label>
+                <div
                   className="input"
-                  value={formData.lotNumber}
-                  onChange={(e) => setFormData({ ...formData, lotNumber: e.target.value })}
-                  required
-                />
+                  style={{
+                    backgroundColor: 'var(--color-allocated-bg)',
+                    color: 'var(--color-primary)',
+                    fontWeight: '600',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    cursor: 'default'
+                  }}
+                >
+                  <span>{nextLotNumber || 'Loading...'}</span>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)', fontStyle: 'italic' }}>
+                    Generated automatically
+                  </span>
+                </div>
               </div>
               <div>
                 <label className="label">Client *</label>
@@ -274,14 +298,20 @@ function InboundUI() {
 
             {formData.subLots.map((subLot, index) => (
               <div key={index} className="sublot-row">
-                <input
-                  type="text"
-                  className="input"
-                  placeholder="Sub-Lot Number"
-                  value={subLot.subLotNumber}
-                  onChange={(e) => updateSubLot(index, 'subLotNumber', e.target.value)}
-                  required
-                />
+                <div style={{
+                  padding: '0.75rem 1rem',
+                  backgroundColor: 'var(--color-allocated-bg)',
+                  borderRadius: 'var(--radius)',
+                  border: '1px solid var(--color-border)',
+                  color: 'var(--color-primary)',
+                  fontWeight: '600',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minWidth: '180px'
+                }}>
+                  {nextLotNumber ? `${nextLotNumber}-SL-${index + 1}` : 'Loading...'}
+                </div>
                 <select
                   className="select"
                   value={subLot.designId}

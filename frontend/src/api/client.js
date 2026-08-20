@@ -55,6 +55,7 @@ export const api = {
   lots: {
     list: (params) => client.get('/lots', { params }),
     get: (id) => client.get(`/lots/${id}`),
+    getNextLotNumber: () => client.get('/lots/next-lot-number'),
     create: (data) => client.post('/lots', data),
     update: (id, data) => client.put(`/lots/${id}`, data),
     delete: (id) => client.delete(`/lots/${id}`),
