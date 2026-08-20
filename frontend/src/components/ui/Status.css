@@ -1,0 +1,84 @@
+/* ============================================
+   STATUS COMPONENT
+   ============================================ */
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  line-height: 1;
+  white-space: nowrap;
+  min-height: 32px;
+  border: 1px solid;
+}
+
+.status-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-base);
+  line-height: 1;
+}
+
+.status-label {
+  line-height: 1;
+}
+
+/* Status Variants */
+.status-secondary {
+  background-color: var(--color-received-bg);
+  color: var(--color-received);
+  border-color: var(--color-received);
+}
+
+.status-info {
+  background-color: var(--color-allocated-bg);
+  color: var(--color-allocated);
+  border-color: var(--color-allocated);
+}
+
+.status-warning {
+  background-color: var(--color-in-production-bg);
+  color: var(--color-in-production);
+  border-color: var(--color-in-production);
+}
+
+.status-success {
+  background-color: var(--color-completed-bg);
+  color: var(--color-completed);
+  border-color: var(--color-completed);
+}
+
+.status-dispatched {
+  background-color: var(--color-dispatched-bg);
+  color: var(--color-dispatched);
+  border-color: var(--color-dispatched);
+}
+
+/* Status Sizes */
+.status-sm {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+  gap: var(--space-1);
+  min-height: 24px;
+}
+
+.status-sm .status-icon {
+  font-size: var(--text-sm);
+}
+
+.status-lg {
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--text-base);
+  gap: var(--space-2);
+  min-height: 40px;
+}
+
+.status-lg .status-icon {
+  font-size: var(--text-lg);
+}

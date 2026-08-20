@@ -219,25 +219,6 @@
    RESPONSIVE
    ============================================ */
 
-@media (max-width: 1024px) {
-  .navbar-container {
-    gap: var(--space-4);
-  }
-
-  .nav-label {
-    display: none;
-  }
-
-  .nav-link {
-    padding: var(--space-2);
-  }
-
-  .nav-indicator {
-    left: var(--space-1);
-    right: var(--space-1);
-  }
-}
-
 @media (max-width: 768px) {
   .navbar-container {
     padding: 0 var(--space-4);
@@ -258,6 +239,16 @@
 
   .main-content {
     padding: var(--space-6) var(--space-4);
+  }
+}
+
+@media (max-width: 430px) {
+  .navbar-container {
+    height: 52px;
+  }
+
+  .main-content {
+    padding: var(--space-4);
   }
 }
 
