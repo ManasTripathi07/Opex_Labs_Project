@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../api/client';
 import { format } from 'date-fns';
+import { Loading, EmptyState } from '../components/ui';
 import './ShiftEntry.css';
 
 function ShiftEntry() {
@@ -54,13 +55,6 @@ function ShiftEntry() {
 
   const loadPreviousRunning = async () => {
     try {
-      console.log('Loading previous running with params:', {
-        machineId,
-        designId: assignment.design_id,
-        beforeDate: formData.shiftDate,
-        beforeShiftType: formData.shiftType,
-      });
-
       const res = await api.shiftLogs.getPreviousRunning({
         machineId,
         designId: assignment.design_id,
@@ -68,11 +62,10 @@ function ShiftEntry() {
         beforeShiftType: formData.shiftType,
       });
 
-      console.log('Previous running response:', res.data);
       setPreviousRunning(res.data.previousRunningStitches);
     } catch (error) {
       console.error('Failed to load previous running:', error);
-      setPreviousRunning(0); // Set to 0 on error
+      setPreviousRunning(0);
     }
   };
 
@@ -83,7 +76,6 @@ function ShiftEntry() {
     setSuccess(false);
 
     const submittedCounter = parseInt(formData.currentRunningStitches);
-    console.log('🚀 Submitting shift with counter:', submittedCounter);
 
     try {
       await api.shiftLogs.create({
@@ -97,13 +89,9 @@ function ShiftEntry() {
         roundsCompleted: parseInt(formData.roundsCompleted),
       });
 
-      console.log('✅ Shift submitted successfully!');
       setSuccess(true);
 
-      // Reload previous running to show the just-submitted counter as the new "previous"
-      console.log('🔄 Reloading previous counter...');
       await loadPreviousRunning();
-      console.log('✅ Previous counter updated! Next shift should show:', submittedCounter);
 
       setFormData({
         ...formData,
@@ -121,86 +109,97 @@ function ShiftEntry() {
 
   if (loading) {
     return (
-      <div className="shift-entry">
-        <div className="shift-loading">Loading...</div>
+      <div className="shift-container">
+        <Loading message="Loading machine data..." size="lg" />
       </div>
     );
   }
 
   if (!assignment) {
     return (
-      <div className="shift-entry">
+      <div className="shift-container">
         <button
-          className="shift-back-button"
+          className="btn btn-ghost shift-back"
           onClick={() => navigate('/dashboard')}
           type="button"
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="19" y1="12" x2="5" y2="12"></line>
             <polyline points="12 19 5 12 12 5"></polyline>
           </svg>
-          Back to Dashboard
+          Back
         </button>
-        <div className="shift-card">
-          <h1>No Active Assignment</h1>
-          <p>Machine {machine?.identifier} has no active assignment.</p>
-        </div>
+        <EmptyState
+          icon="🏭"
+          title="No active assignment"
+          description={`Machine ${machine?.identifier} has no active work. Assign work from the Production screen to begin logging shifts.`}
+          action={
+            <button className="btn btn-primary" onClick={() => navigate('/production')}>
+              View Production
+            </button>
+          }
+        />
       </div>
     );
   }
 
   return (
-    <div className="shift-entry">
+    <div className="shift-container">
       <button
-        className="shift-back-button"
+        className="btn btn-ghost shift-back"
         onClick={() => navigate('/dashboard')}
         type="button"
       >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <line x1="19" y1="12" x2="5" y2="12"></line>
           <polyline points="12 19 5 12 12 5"></polyline>
         </svg>
-        Back to Dashboard
+        Back
       </button>
 
       <div className="shift-header">
         <h1>{machine.identifier}</h1>
-        <div className="shift-subtitle">{machine.name}</div>
+        <p className="shift-subtitle">{machine.name}</p>
       </div>
 
-      <div className="shift-card">
-        <div className="shift-info">
-          <div className="info-label">Design</div>
-          <div className="info-value">{assignment.design_identifier}</div>
-        </div>
-        <div className="shift-info">
-          <div className="info-label">Sub-Lot</div>
-          <div className="info-value">{assignment.sub_lot_number}</div>
+      <div className="card shift-work-info">
+        <h2 className="work-info-title">Current Work</h2>
+        <div className="work-info-grid">
+          <div className="work-info-item">
+            <span className="work-info-label">Design</span>
+            <span className="work-info-value">{assignment.design_identifier}</span>
+          </div>
+          <div className="work-info-item">
+            <span className="work-info-label">Sub-Lot</span>
+            <span className="work-info-value">{assignment.sub_lot_number}</span>
+          </div>
         </div>
       </div>
 
       {success && (
-        <div className="shift-success">
-          ✓ Shift logged successfully!
+        <div className="shift-alert shift-alert-success">
+          ✓ Shift logged successfully
         </div>
       )}
 
       {error && (
-        <div className="shift-error">
+        <div className="shift-alert shift-alert-error">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="shift-form">
-        <div className="shift-card">
-          <label className="shift-label">Operator</label>
+        <div className="card">
+          <label className="form-label">
+            Operator <span className="required">*</span>
+          </label>
           <select
-            className="shift-select"
+            className="select"
             value={formData.operatorId}
             onChange={(e) => setFormData({ ...formData, operatorId: e.target.value })}
             required
           >
-            <option value="">Select Operator</option>
+            <option value="">Select operator</option>
             {operators.map((op) => (
               <option key={op.id} value={op.id}>
                 {op.name}
@@ -209,68 +208,56 @@ function ShiftEntry() {
           </select>
         </div>
 
-        <div className="shift-card">
-          <label className="shift-label">Date</label>
-          <input
-            type="date"
-            className="shift-input"
-            value={formData.shiftDate}
-            onChange={(e) => setFormData({ ...formData, shiftDate: e.target.value })}
-            required
-          />
-        </div>
-
-        <div className="shift-card">
-          <label className="shift-label">Shift</label>
-          <div className="shift-tabs">
-            {['morning', 'afternoon', 'night'].map((shift) => (
-              <button
-                key={shift}
-                type="button"
-                className={`shift-tab ${formData.shiftType === shift ? 'active' : ''}`}
-                onClick={() => setFormData({ ...formData, shiftType: shift })}
-              >
-                {shift.charAt(0).toUpperCase() + shift.slice(1)}
-              </button>
-            ))}
+        <div className="card shift-date-shift">
+          <div className="form-field">
+            <label className="form-label">
+              Date <span className="required">*</span>
+            </label>
+            <input
+              type="date"
+              className="input"
+              value={formData.shiftDate}
+              onChange={(e) => setFormData({ ...formData, shiftDate: e.target.value })}
+              required
+            />
           </div>
-        </div>
 
-        <div className="shift-card" style={{
-          border: '2px solid var(--color-primary)',
-          backgroundColor: 'rgba(59, 130, 246, 0.03)',
-          transition: 'all 0.3s ease'
-        }}>
-          <div className="shift-info">
-            <div className="info-label" style={{ fontSize: '1.125rem', fontWeight: '600' }}>
-              📊 Previous Counter Reading
-            </div>
-            <div className="info-value previous-value" style={{
-              transition: 'all 0.3s ease',
-              animation: previousRunning > 0 ? 'pulse 0.5s ease' : 'none'
-            }}>
-              {previousRunning.toLocaleString()}
+          <div className="form-field">
+            <label className="form-label">
+              Shift <span className="required">*</span>
+            </label>
+            <div className="shift-type-buttons">
+              {['morning', 'afternoon', 'night'].map((shift) => (
+                <button
+                  key={shift}
+                  type="button"
+                  className={`btn ${formData.shiftType === shift ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => setFormData({ ...formData, shiftType: shift })}
+                >
+                  {shift.charAt(0).toUpperCase() + shift.slice(1)}
+                </button>
+              ))}
             </div>
           </div>
-          <div style={{
-            marginTop: '0.75rem',
-            paddingTop: '0.75rem',
-            borderTop: '1px solid var(--color-border)',
-            fontSize: '0.875rem',
-            color: 'var(--color-text-secondary)',
-            fontStyle: 'italic'
-          }}>
+        </div>
+
+        <div className="card shift-previous-counter">
+          <h3 className="counter-title">Previous Counter Reading</h3>
+          <div className="counter-value">{previousRunning.toLocaleString()}</div>
+          <p className="counter-hint">
             {previousRunning === 0
               ? 'No previous shift found. This will be the starting counter.'
               : 'This is the last counter reading. Enter your current reading below.'}
-          </div>
+          </p>
         </div>
 
-        <div className="shift-card">
-          <label className="shift-label">Current Counter *</label>
+        <div className="card">
+          <label className="form-label">
+            Current Counter <span className="required">*</span>
+          </label>
           <input
             type="number"
-            className="shift-input large"
+            className="input input-large"
             value={formData.currentRunningStitches}
             onChange={(e) => setFormData({ ...formData, currentRunningStitches: e.target.value })}
             required
@@ -279,21 +266,24 @@ function ShiftEntry() {
           />
         </div>
 
-        <div className="shift-card">
-          <label className="shift-label">Rounds Completed</label>
+        <div className="card">
+          <label className="form-label">
+            Rounds Completed <span className="required">*</span>
+          </label>
           <input
             type="number"
-            className="shift-input large"
+            className="input input-large"
             value={formData.roundsCompleted}
             onChange={(e) => setFormData({ ...formData, roundsCompleted: e.target.value })}
             required
             min="0"
+            placeholder="Enter rounds"
           />
         </div>
 
         <button
           type="submit"
-          className="shift-submit"
+          className={`btn btn-success shift-submit ${submitting ? 'btn-loading' : ''}`}
           disabled={submitting}
         >
           {submitting ? 'Submitting...' : 'Submit Shift Log'}

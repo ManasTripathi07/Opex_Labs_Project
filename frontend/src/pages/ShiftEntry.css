@@ -1,276 +1,270 @@
-.shift-entry {
-  min-height: 100vh;
-  background-color: var(--color-bg);
-  padding: 1rem;
-  max-width: 600px;
+/* ============================================
+   SHIFT ENTRY
+   ============================================ */
+
+.shift-container {
+  max-width: 700px;
   margin: 0 auto;
-  position: relative;
+  padding: var(--space-6);
 }
 
-.shift-back-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  background-color: var(--color-surface);
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  margin-bottom: 1rem;
-  box-shadow: var(--shadow-sm);
+.shift-back {
+  margin-bottom: var(--space-6);
+  gap: var(--space-2);
 }
 
-.shift-back-button:hover {
-  color: var(--color-primary);
-  border-color: var(--color-primary);
-  background-color: rgba(59, 130, 246, 0.05);
-  transform: translateX(-4px);
-  box-shadow: var(--shadow-md);
-}
-
-.shift-back-button:active {
-  transform: translateX(-2px) scale(0.98);
-}
-
-.shift-back-button svg {
-  width: 20px;
-  height: 20px;
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.shift-back-button:hover svg {
-  transform: translateX(-2px);
-}
-
-[data-theme="dark"] .shift-back-button {
-  background-color: rgba(30, 41, 59, 0.8);
-  border-color: rgba(148, 163, 184, 0.3);
-}
-
-[data-theme="dark"] .shift-back-button:hover {
-  background-color: rgba(59, 130, 246, 0.1);
-  border-color: rgba(59, 130, 246, 0.5);
-  color: rgb(147, 197, 253);
+.shift-back svg {
+  width: 16px;
+  height: 16px;
 }
 
 .shift-header {
   text-align: center;
-  margin-bottom: 2rem;
-  padding: 1rem;
+  margin-bottom: var(--space-8);
 }
 
 .shift-header h1 {
-  font-size: 2.5rem;
+  font-size: var(--text-4xl);
+  font-weight: var(--font-bold);
   color: var(--color-primary);
-  margin-bottom: 0.5rem;
+  margin: 0 0 var(--space-2) 0;
 }
 
 .shift-subtitle {
-  font-size: 1.25rem;
+  font-size: var(--text-lg);
   color: var(--color-text-secondary);
+  margin: 0;
 }
 
-.shift-loading {
-  text-align: center;
-  padding: 3rem;
-  font-size: 1.5rem;
-  color: var(--color-text-secondary);
+/* ============================================
+   WORK INFO
+   ============================================ */
+
+.shift-work-info {
+  margin-bottom: var(--space-8);
 }
 
-.shift-card {
-  background-color: var(--color-surface);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  box-shadow: var(--shadow);
+.work-info-title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--color-text);
+  margin: 0 0 var(--space-4) 0;
 }
 
-.shift-info {
+.work-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+
+.work-info-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 0;
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
-.info-label {
-  font-size: 1rem;
-  color: var(--color-text-secondary);
-  font-weight: 500;
+.work-info-label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.info-value {
-  font-size: 1.25rem;
-  font-weight: 600;
+.work-info-value {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
   color: var(--color-text);
 }
 
-.previous-value {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--color-primary);
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
-  padding: 0.5rem 1rem;
+/* ============================================
+   ALERTS
+   ============================================ */
+
+.shift-alert {
+  padding: var(--space-4);
   border-radius: var(--radius);
-  border: 2px solid rgba(59, 130, 246, 0.3);
-}
-
-[data-theme="dark"] .previous-value {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%);
-  border-color: rgba(59, 130, 246, 0.4);
-  color: rgb(147, 197, 253);
-}
-
-.shift-label {
-  display: block;
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-  color: var(--color-text);
-}
-
-.shift-input {
-  width: 100%;
-  padding: 1rem;
-  font-size: 1.125rem;
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius);
-  box-sizing: border-box;
-}
-
-.shift-input.large {
-  font-size: 1.5rem;
-  padding: 1.25rem;
   text-align: center;
-  font-weight: 600;
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  margin-bottom: var(--space-6);
 }
 
-.shift-input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: var(--focus-ring);
+.shift-alert-success {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: var(--color-success);
+  border: 1px solid var(--color-success);
 }
 
-.shift-select {
-  width: 100%;
-  padding: 1rem;
-  font-size: 1.125rem;
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius);
-  background-color: var(--color-input-bg);
-  color: var(--color-input-text);
+.shift-alert-error {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
 }
 
-.shift-tabs {
+[data-theme="dark"] .shift-alert-success {
+  background-color: rgba(34, 197, 94, 0.15);
+}
+
+[data-theme="dark"] .shift-alert-error {
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+/* ============================================
+   FORM
+   ============================================ */
+
+.shift-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.shift-form .card {
+  padding: var(--space-6);
+}
+
+.form-label {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+.form-field {
+  margin-bottom: var(--space-4);
+}
+
+.form-field:last-child {
+  margin-bottom: 0;
+}
+
+.required {
+  color: var(--color-error);
+}
+
+.input-large {
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  text-align: center;
+  padding: var(--space-4);
+}
+
+/* ============================================
+   DATE & SHIFT
+   ============================================ */
+
+.shift-date-shift {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.shift-type-buttons {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
-.shift-tab {
-  padding: 1rem;
-  font-size: 1rem;
-  font-weight: 600;
-  border: 2px solid var(--color-border);
-  background-color: var(--color-surface);
+/* ============================================
+   PREVIOUS COUNTER
+   ============================================ */
+
+.shift-previous-counter {
+  background-color: rgba(37, 99, 235, 0.05);
+  border: 1px solid var(--color-primary);
+}
+
+[data-theme="dark"] .shift-previous-counter {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.counter-title {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
   color: var(--color-text);
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: all 0.2s;
+  margin: 0 0 var(--space-4) 0;
 }
 
-.shift-tab:active {
-  transform: scale(0.98);
+.counter-value {
+  font-size: var(--text-4xl);
+  font-weight: var(--font-bold);
+  color: var(--color-primary);
+  text-align: center;
+  margin-bottom: var(--space-3);
+  font-variant-numeric: tabular-nums;
 }
 
-.shift-tab.active {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
-  color: var(--color-text-inverse);
+.counter-hint {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin: 0;
+  font-style: italic;
 }
+
+/* ============================================
+   SUBMIT BUTTON
+   ============================================ */
 
 .shift-submit {
   width: 100%;
-  padding: 1.5rem;
-  font-size: 1.25rem;
-  font-weight: 700;
-  background-color: var(--color-success);
-  color: var(--color-text-inverse);
-  border: none;
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: var(--shadow-md);
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  min-height: 56px;
 }
 
-.shift-submit:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-}
+/* ============================================
+   RESPONSIVE - MOBILE
+   ============================================ */
 
-.shift-submit:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.shift-submit:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.shift-success {
-  background-color: var(--color-completed-bg);
-  color: var(--color-completed);
-  border: 1px solid var(--color-completed);
-  padding: 1.5rem;
-  border-radius: var(--radius);
-  text-align: center;
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  animation: slideIn 0.3s ease;
-}
-
-.shift-error {
-  background-color: var(--alert-error-bg);
-  color: var(--alert-error-text);
-  border: 1px solid var(--alert-error-border);
-  padding: 1.5rem;
-  border-radius: var(--radius);
-  text-align: center;
-  font-size: 1.125rem;
-  font-weight: 500;
-  margin-bottom: 1rem;
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateY(-10px);
-    opacity: 0;
+@media (max-width: 768px) {
+  .shift-container {
+    padding: var(--space-4);
   }
-  to {
-    transform: translateY(0);
-    opacity: 1;
+
+  .shift-header h1 {
+    font-size: var(--text-3xl);
+  }
+
+  .work-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .shift-date-shift {
+    gap: var(--space-4);
+  }
+
+  .shift-type-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .counter-value {
+    font-size: var(--text-3xl);
   }
 }
 
-@keyframes pulse {
-  0% {
-    transform: scale(1);
+@media (max-width: 430px) {
+  .shift-header h1 {
+    font-size: var(--text-2xl);
   }
-  50% {
-    transform: scale(1.05);
-    color: var(--color-success);
+
+  .counter-value {
+    font-size: var(--text-2xl);
   }
-  100% {
-    transform: scale(1);
+
+  .input-large {
+    font-size: var(--text-lg);
   }
 }
 
-@media (min-width: 768px) {
-  .shift-entry {
-    padding: 2rem;
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .shift-alert {
+    animation: none !important;
   }
 }
