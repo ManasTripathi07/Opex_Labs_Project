@@ -190,10 +190,11 @@ function ShiftEntry() {
 
       <form onSubmit={handleSubmit} className="shift-form">
         <div className="card">
-          <label className="form-label">
+          <label className="form-label" htmlFor="operator-select">
             Operator <span className="required">*</span>
           </label>
           <select
+            id="operator-select"
             className="select"
             value={formData.operatorId}
             onChange={(e) => setFormData({ ...formData, operatorId: e.target.value })}
@@ -210,10 +211,11 @@ function ShiftEntry() {
 
         <div className="card shift-date-shift">
           <div className="form-field">
-            <label className="form-label">
+            <label className="form-label" htmlFor="shift-date">
               Date <span className="required">*</span>
             </label>
             <input
+              id="shift-date"
               type="date"
               className="input"
               value={formData.shiftDate}
@@ -252,10 +254,11 @@ function ShiftEntry() {
         </div>
 
         <div className="card">
-          <label className="form-label">
+          <label className="form-label" htmlFor="current-counter">
             Current Counter <span className="required">*</span>
           </label>
           <input
+            id="current-counter"
             type="number"
             className="input input-large"
             value={formData.currentRunningStitches}
@@ -267,10 +270,11 @@ function ShiftEntry() {
         </div>
 
         <div className="card">
-          <label className="form-label">
+          <label className="form-label" htmlFor="rounds-completed">
             Rounds Completed <span className="required">*</span>
           </label>
           <input
+            id="rounds-completed"
             type="number"
             className="input input-large"
             value={formData.roundsCompleted}

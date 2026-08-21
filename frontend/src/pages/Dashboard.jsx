@@ -258,6 +258,7 @@ function Dashboard() {
             className="input date-input"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
+            aria-label="Select date for daily production report"
           />
         }
       >
